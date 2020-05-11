@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    ports:
+      - "80:8000"
+    depends_on:
+      - db
+      - redis
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - "/db-dump:/data/dump"
+      - "/data/postgres:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_PASSWORD=school
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=jdbc:postgresql://localhost:5432/school
+networks:
+  docker-practice-net:
+    driver: bridge
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
