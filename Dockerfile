@@ -4,6 +4,6 @@ COPY . /usr/app/
 
 WORKDIR /usr/app
 
-EXPOSE 8080
+EXPOSE 8080 8000
 
 RUN mvn spring-boot:run
