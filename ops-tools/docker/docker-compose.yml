@@ -3,24 +3,43 @@ services:
   db:
     image: postgres
     volumes:
-      - ../../data/postgres:/var/lib/postgresql/data
-      - ../../data/dump:/db-dump
+      - ~/data/postgres:/var/lib/postgresql/data
+      - ~/data/dump:/db-dump
     ports:
       - "5432:5432"
+    networks:
+      - docker-practice-net
     environment:
       - POSTGRES_DB=school
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=school
+    restart: always
 
   redis:
     image: redis
     ports:
       - "6379:6379"
+    networks:
+      - docker-practice-net
+    restart: always
 
   app:
     image: app
     depends_on:
       - db
       - redis
+    restart: always
     ports:
       - "8888:8888"
+    networks:
+      - docker-practice-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/school
+    volumes:
+      - .. ./tmp:/docker-practice-java-develop/target/*.jar
+
+networks:
+  docker-practice-net:
+    driver: bridge
+
+
