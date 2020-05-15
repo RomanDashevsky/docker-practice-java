@@ -1,10 +1,12 @@
 package ru.thumbtack.dockerpracticejava.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.thumbtack.dockerpracticejava.model.User;
 import ru.thumbtack.dockerpracticejava.repositories.UserRepository;
 import ru.thumbtack.dockerpracticejava.repositories.SessionRepository;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * Check controller.
@@ -57,6 +59,17 @@ public class CheckController {
         }
 
         return map;
+    }
+
+    @PostMapping
+    public void create(@RequestParam("fullname") String fullname, @RequestParam("email") String email) {
+        User user = new User(fullname, email);
+        bookService.save(user);
+    }
+
+    @GetMapping(value = "{id}")
+    public Optional<User> get(@PathVariable(value = "id") Long id) {
+        return bookService.findById(id);
     }
 
 }

@@ -1,0 +1,44 @@
+version: "3.5"
+networks:
+  docker-practice-net:
+    driver: bridge
+services:
+  app:
+    image: app
+    container_name: app
+    restart: always
+    networks:
+      - docker-practice-net
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/school
+    volumes:
+      - .. ./tmp:/docker-practice-java-develop/target/*.jar
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:12.2
+    container_name: postgres
+    networks:
+      - docker-practice-net
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: school
+      POSTGRES_DB: school
+      PGDATA: /var/lib/postgresql/data/dump
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data/dump
+    restart: always
+  redis:
+    image: redis:6.0-alpine
+    networks:
+      - docker-practice-net
+    container_name: redis
+    hostname: localhost
+    ports:
+      - 6379:6379
+    restart: always
