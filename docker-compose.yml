@@ -26,13 +26,9 @@ services:
       - docker-practice-net
 
    app:
-    image: docker-lesson
+    image: lesson
     ports:
       - 8888:8080
-      - 5005:5005
-    volumes:
-     - ./app:/app
-    working_dir: /app
     networks:
       - docker-practice-net
     depends_on:
@@ -41,6 +37,7 @@ services:
 
 networks:
    docker-practice-net:
+
 volumes:
    db-data:
    db-dump:
