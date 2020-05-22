@@ -1,0 +1,39 @@
+version: "3"
+services:
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - docker-practice-net
+    
+  db:
+    image: postgres:12.2
+    volumes:
+      - ~/data/postgres:/var/lib/postgresql/data
+      - ~/data/dump:/db-dump
+    ports:
+      - "5432:5432"
+    networks:
+      - docker-practice-net
+    environment:
+       POSTGRES_DB: school
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: school
+
+  app:
+    build: ./images/app
+    depends_on:
+      - db
+      - redis
+    networks:
+      - docker-practice-net
+    ports:
+      - "8888:8888"
+    volumes:
+      - ~/ops-tools/docker/docker-practice-java-develop:/usr/app/src
+
+networks:
+  docker-practice-net:
+
